@@ -9,12 +9,12 @@
 Summary:	The Qt5 Speech library
 Summary(pl.UTF-8):	Biblioteka Qt5 Speech
 Name:		qt5-%{orgname}
-Version:	5.11.1
+Version:	5.12.1
 Release:	1
 License:	FDL or GPL v2.0 or LGPL v3.0
 Group:		Libraries
-Source0:	http://download.qt.io/official_releases/qt/5.11/%{version}/submodules/%{orgname}-everywhere-src-%{version}.tar.xz
-# Source0-md5:	c76b6663b8818f2a85c45465b03c8d6a
+Source0:	http://download.qt.io/official_releases/qt/5.12/%{version}/submodules/%{orgname}-everywhere-src-%{version}.tar.xz
+# Source0-md5:	1bf0369e6ad221d8192612a36ea480ca
 URL:		http://www.qt.io/
 BuildRequires:	Qt5Core-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Gui-devel >= %{qtbase_ver}
