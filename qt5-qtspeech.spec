@@ -21,6 +21,7 @@ BuildRequires:	Qt5Gui-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Multimedia-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Widgets-devel >= %{qtbase_ver}
 BuildRequires:	Qt5XmlPatterns-devel >= %{qtbase_ver}
+BuildRequires:	qt5-doc-common >= %{qtbase_ver}
 %if %{with flite}
 BuildRequires:	flite-devel >= 2.1
 %endif
