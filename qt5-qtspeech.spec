@@ -1,26 +1,28 @@
 #
 # Conditional build:
-%bcond_without	doc	# Documentation
-%bcond_with	flite   # Flite plugin
+%bcond_without	doc			# documentation
+%bcond_without	flite			# Flite plugin
+%bcond_without	speech_dispatcher	# Speech Dispatcher plugin
 
 %define		orgname		qtspeech
-%define		qtbase_ver	%{version}
-%define		qttools_ver	%{version}
+%define		qtbase_ver		%{version}
+%define		qttools_ver		%{version}
+%define		qtxmlpatterns_ver	%{version}
 Summary:	The Qt5 Speech library
 Summary(pl.UTF-8):	Biblioteka Qt5 Speech
 Name:		qt5-%{orgname}
 Version:	5.15.2
 Release:	2
-License:	FDL or GPL v2.0 or LGPL v3.0
+License:	LGPL v3 or GPL v2+ or commercial
 Group:		Libraries
 Source0:	http://download.qt.io/official_releases/qt/5.15/%{version}/submodules/%{orgname}-everywhere-src-%{version}.tar.xz
 # Source0-md5:	6acb2487e6e2e4b495756fdf6180d248
-URL:		http://www.qt.io/
+URL:		https://www.qt.io/
 BuildRequires:	Qt5Core-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Gui-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Multimedia-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Widgets-devel >= %{qtbase_ver}
-BuildRequires:	Qt5XmlPatterns-devel >= %{qtbase_ver}
+BuildRequires:	Qt5XmlPatterns-devel >= %{qtxmlpatterns_ver}
 BuildRequires:	qt5-doc-common >= %{qtbase_ver}
 %if %{with flite}
 BuildRequires:	flite-devel >= 2.1
@@ -30,8 +32,10 @@ BuildRequires:	qt5-assistant >= %{qttools_ver}
 %endif
 BuildRequires:	qt5-build >= %{qtbase_ver}
 BuildRequires:	qt5-qmake >= %{qtbase_ver}
-BuildRequires:	rpmbuild(macros) >= 1.654
+BuildRequires:	rpmbuild(macros) >= 1.752
+%if %{with speech_dispatcher}
 BuildRequires:	speech-dispatcher-devel
+%endif
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -79,6 +83,18 @@ Qt5 Speech library - development files.
 %description -n Qt5Speech-devel -l pl.UTF-8
 Biblioteka Qt5 Speech - pliki programistyczne.
 
+%package -n Qt5Speech-plugin-speechd
+Summary:	Speech Dispatcher plugin for Qt5 Speech library
+Summary(pl.UTF-8):	Wtyczka Speech Dispatcher do biblioteki Qt5 Speech
+Group:		Libraries
+Requires:	Qt5Speech = %{version}-%{release}
+
+%description -n Qt5Speech-plugin-speechd
+Speech Dispatcher plugin for Qt5 Speech library.
+
+%description -n Qt5Speech-plugin-speechd -l pl.UTF-8
+Wtyczka Speech Dispatcher do biblioteki Qt5 Speech
+
 %package -n Qt5Speech-plugin-flite
 Summary:	flite plugin for Qt5 Speech library
 Summary(pl.UTF-8):	Wtyczka flite do biblioteki Qt5 Speech
@@ -95,11 +111,10 @@ Wtyczka flite do biblioteki Qt5 Speech
 %package doc
 Summary:	Qt5 Speech documentation in HTML format
 Summary(pl.UTF-8):	Dokumentacja do biblioteki Qt5 Speech w formacie HTML
+License:	FDL v1.3
 Group:		Documentation
 Requires:	qt5-doc-common >= %{qtbase_ver}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description doc
 Qt5 Speech documentation in HTML format.
@@ -110,11 +125,10 @@ Dokumentacja do biblioteki Qt5 Speech w formacie HTML.
 %package doc-qch
 Summary:	Qt5 Speech documentation in QCH format
 Summary(pl.UTF-8):	Dokumentacja do biblioteki Qt5 Speech w formacie QCH
+License:	FDL v1.3
 Group:		Documentation
 Requires:	qt5-doc-common >= %{qtbase_ver}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description doc-qch
 Qt5 Speech documentation in QCH format.
@@ -125,10 +139,9 @@ Dokumentacja do biblioteki Qt5 Speech w formacie QCH.
 %package examples
 Summary:	Qt5 Speech examples
 Summary(pl.UTF-8):	Przykłady do biblioteki Qt5 Speech
+License:	BSD or commercial
 Group:		Development/Libraries
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description examples
 Qt5 Speech examples.
@@ -141,12 +154,14 @@ Przykłady do biblioteki Qt5 Speech.
 
 %build
 qmake-qt5 -- \
-	-%{!?with_flite:no-}flite
+	-%{!?with_flite:no-}flite \
+	-%{!?with_speech_dispatcher:no-}speechd
 %{__make}
 %{?with_doc:%{__make} docs}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
@@ -193,11 +208,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n Qt5Speech
 %defattr(644,root,root,755)
-%doc LICENSE.* dist/changes-*
+%doc dist/changes-*
+# R: Core
 %attr(755,root,root) %{_libdir}/libQt5TextToSpeech.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libQt5TextToSpeech.so.5
 %dir %{_libdir}/qt5/plugins/texttospeech
-%attr(755,root,root) %{_libdir}/qt5/plugins/texttospeech/libqtexttospeech_speechd.so
+%dir %{_libdir}/cmake/Qt5TextToSpeech
 
 %files -n Qt5Speech-devel
 %defattr(644,root,root,755)
@@ -205,14 +221,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libQt5TextToSpeech.prl
 %{_includedir}/qt5/QtTextToSpeech
 %{_pkgconfigdir}/Qt5TextToSpeech.pc
-%{_libdir}/cmake/Qt5TextToSpeech
+%{_libdir}/cmake/Qt5TextToSpeech/Qt5TextToSpeechConfig*.cmake
 %{qt5dir}/mkspecs/modules/qt_lib_texttospeech.pri
 %{qt5dir}/mkspecs/modules/qt_lib_texttospeech_private.pri
+
+%files -n Qt5Speech-plugin-speechd
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/qt5/plugins/texttospeech/libqtexttospeech_speechd.so
+%{_libdir}/cmake/Qt5TextToSpeech/Qt5TextToSpeech_QTextToSpeechPluginSpeechd.cmake
 
 %if %{with flite}
 %files -n Qt5Speech-plugin-flite
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/qt5/plugins/texttospeech/libqttexttospeech_flite.so
+%{_libdir}/cmake/Qt5TextToSpeech/Qt5TextToSpeech_QTextToSpeechEngineFlite.cmake
 %endif
 
 %if %{with doc}
