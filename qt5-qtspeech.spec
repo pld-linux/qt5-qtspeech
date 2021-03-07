@@ -114,7 +114,7 @@ Summary(pl.UTF-8):	Dokumentacja do biblioteki Qt5 Speech w formacie HTML
 License:	FDL v1.3
 Group:		Documentation
 Requires:	qt5-doc-common >= %{qtbase_ver}
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description doc
 Qt5 Speech documentation in HTML format.
@@ -128,7 +128,7 @@ Summary(pl.UTF-8):	Dokumentacja do biblioteki Qt5 Speech w formacie QCH
 License:	FDL v1.3
 Group:		Documentation
 Requires:	qt5-doc-common >= %{qtbase_ver}
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description doc-qch
 Qt5 Speech documentation in QCH format.
@@ -141,7 +141,7 @@ Summary:	Qt5 Speech examples
 Summary(pl.UTF-8):	Przykłady do biblioteki Qt5 Speech
 License:	BSD or commercial
 Group:		Development/Libraries
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description examples
 Qt5 Speech examples.
