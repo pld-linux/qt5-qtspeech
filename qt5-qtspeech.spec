@@ -33,7 +33,7 @@ BuildRequires:	qt5-assistant >= %{qttools_ver}
 BuildRequires:	qt5-build >= %{qtbase_ver}
 BuildRequires:	qt5-qmake >= %{qtbase_ver}
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.016
 %if %{with speech_dispatcher}
 BuildRequires:	speech-dispatcher-devel
 %endif
@@ -154,7 +154,7 @@ Przykłady do biblioteki Qt5 Speech.
 %setup -q -n %{orgname}-everywhere-src-%{version}
 
 %build
-qmake-qt5 -- \
+%{qmake_qt5} -- \
 	-%{!?with_flite:no-}flite \
 	-%{!?with_speech_dispatcher:no-}speechd
 %{__make}
