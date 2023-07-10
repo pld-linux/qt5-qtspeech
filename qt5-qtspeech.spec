@@ -63,7 +63,7 @@ Ten pakiet zawiera bibliotekę Qt5 Speech.
 Summary:	The Qt5 Speech library
 Summary(pl.UTF-8):	Biblioteka Qt5 Speech
 Group:		Libraries
-Requires:	Qt5Core >= %{qtbase_ver}
+%requires_eq_to	Qt5Core Qt5Core-devel
 
 %description -n Qt5Speech
 Qt5 Speech library.
