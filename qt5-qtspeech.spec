@@ -226,10 +226,12 @@ rm -rf $RPM_BUILD_ROOT
 %{qt5dir}/mkspecs/modules/qt_lib_texttospeech.pri
 %{qt5dir}/mkspecs/modules/qt_lib_texttospeech_private.pri
 
+%if %{with speech_dispatcher}
 %files -n Qt5Speech-plugin-speechd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/qt5/plugins/texttospeech/libqtexttospeech_speechd.so
 %{_libdir}/cmake/Qt5TextToSpeech/Qt5TextToSpeech_QTextToSpeechPluginSpeechd.cmake
+%endif
 
 %if %{with flite}
 %files -n Qt5Speech-plugin-flite
